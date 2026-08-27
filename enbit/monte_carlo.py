@@ -34,7 +34,11 @@ class MonteCarloResult:
 
 
 def _normal_quantile(confidence: float) -> float:
-    table = {0.90: 1.6448536269514722, 0.95: 1.959963984540054, 0.99: 2.5758293035489004}
+    table = {
+        0.90: 1.6448536269514722,
+        0.95: 1.959963984540054,
+        0.99: 2.5758293035489004,
+    }
     rounded = round(confidence, 2)
     if rounded not in table:
         raise ValueError("confidence must be one of 0.90, 0.95, or 0.99")
@@ -97,5 +101,6 @@ def convergence_curve(
     if not path_counts or any(paths < 2 for paths in path_counts):
         raise ValueError("path_counts must contain values of at least 2")
     return [
-        price_monte_carlo(params, option_type, paths, seed, antithetic) for paths in path_counts
+        price_monte_carlo(params, option_type, paths, seed, antithetic)
+        for paths in path_counts
     ]

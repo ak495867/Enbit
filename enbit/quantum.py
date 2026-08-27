@@ -118,7 +118,9 @@ def estimate_amplitude(
     if phase_bits < 1:
         raise ValueError("phase_bits must be positive")
     estimate = _phase_grid_estimate(probability, phase_bits)
-    resources = estimate_resources(target_error, confidence, payoff_qubits, state_qubits, method)
+    resources = estimate_resources(
+        target_error, confidence, payoff_qubits, state_qubits, method
+    )
     return AmplitudeEstimationResult(
         method=method,
         probability=probability,

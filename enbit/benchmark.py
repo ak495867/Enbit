@@ -36,8 +36,14 @@ class BenchmarkReport:
         }
 
 
-def _required_mc_paths(target_error: float, confidence: float, payoff_variance: float) -> int:
-    z_values = {0.90: 1.6448536269514722, 0.95: 1.959963984540054, 0.99: 2.5758293035489004}
+def _required_mc_paths(
+    target_error: float, confidence: float, payoff_variance: float
+) -> int:
+    z_values = {
+        0.90: 1.6448536269514722,
+        0.95: 1.959963984540054,
+        0.99: 2.5758293035489004,
+    }
     z_value = z_values[round(confidence, 2)]
     return max(2, ceil((z_value * np.sqrt(payoff_variance) / target_error) ** 2))
 
@@ -55,7 +61,9 @@ def benchmark_option(
     classical = price_monte_carlo(
         params, option_type, monte_carlo_paths, seed, antithetic, confidence
     )
-    payoff_samples = discounted_payoffs(params, option_type, monte_carlo_paths, seed, antithetic)
+    payoff_samples = discounted_payoffs(
+        params, option_type, monte_carlo_paths, seed, antithetic
+    )
     quantum = estimate_bounded_expectation(
         payoff_samples,
         target_error=target_error,
@@ -63,7 +71,9 @@ def benchmark_option(
         payoff_scale=max(float(np.max(payoff_samples)), 1e-12),
         method=quantum_method,
     )
-    required_paths = _required_mc_paths(target_error, confidence, classical.payoff_variance)
+    required_paths = _required_mc_paths(
+        target_error, confidence, classical.payoff_variance
+    )
     rows = (
         BenchmarkRow(
             method="black_scholes",
@@ -98,7 +108,9 @@ def benchmark_option(
         BenchmarkRow(
             method=f"amplitude_estimation_{quantum_method}",
             estimate=quantum.estimate,
-            absolute_error_to_black_scholes=abs(quantum.estimate - classical.analytical_baseline),
+            absolute_error_to_black_scholes=abs(
+                quantum.estimate - classical.analytical_baseline
+            ),
             target_error=quantum.target_error,
             confidence=confidence,
             oracle_calls_or_samples=quantum.resource_estimate.oracle_calls,

@@ -22,7 +22,9 @@ class MarketParams:
     def validate(self) -> None:
         values = (self.spot, self.strike, self.volatility, self.maturity, self.notional)
         if any(value <= 0.0 for value in values):
-            raise ValueError("spot, strike, volatility, maturity, and notional must be positive")
+            raise ValueError(
+                "spot, strike, volatility, maturity, and notional must be positive"
+            )
         if not -1.0 < self.rate < 10.0:
             raise ValueError("rate must be between -1 and 10")
 
@@ -31,8 +33,14 @@ def _standard_normal_cdf(value: float) -> float:
     return 0.5 * (1.0 + erf(value / sqrt(2.0)))
 
 
-def terminal_payoff(terminal_spot: float, strike: float, option_type: OptionType) -> float:
-    intrinsic = terminal_spot - strike if option_type is OptionType.CALL else strike - terminal_spot
+def terminal_payoff(
+    terminal_spot: float, strike: float, option_type: OptionType
+) -> float:
+    intrinsic = (
+        terminal_spot - strike
+        if option_type is OptionType.CALL
+        else strike - terminal_spot
+    )
     return max(intrinsic, 0.0)
 
 

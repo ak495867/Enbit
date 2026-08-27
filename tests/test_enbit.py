@@ -34,7 +34,11 @@ def test_put_call_parity(params):
 def test_monte_carlo_is_close_to_analytical_price(params):
     result = price_monte_carlo(params, OptionType.CALL, paths=50_000, seed=19)
     assert result.estimate == pytest.approx(result.analytical_baseline, abs=0.15)
-    assert result.confidence_interval.lower < result.estimate < result.confidence_interval.upper
+    assert (
+        result.confidence_interval.lower
+        < result.estimate
+        < result.confidence_interval.upper
+    )
 
 
 def test_amplitude_estimation_is_bounded():
@@ -58,7 +62,9 @@ def test_risk_metrics_are_ordered(params):
 
 
 def test_benchmark_contains_all_baselines(params):
-    report = benchmark_option(params, OptionType.CALL, target_error=0.05, monte_carlo_paths=10_000)
+    report = benchmark_option(
+        params, OptionType.CALL, target_error=0.05, monte_carlo_paths=10_000
+    )
     methods = {row.method for row in report.rows}
     assert "black_scholes" in methods
     assert "monte_carlo" in methods

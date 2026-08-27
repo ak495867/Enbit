@@ -61,7 +61,9 @@ def option_loss_scenarios(
             notional=params.notional,
         )
     initial_value = black_scholes_price(params, option_type)
-    terminal_spots = simulate_terminal_spots(horizon_params, scenarios, seed, antithetic)
+    terminal_spots = simulate_terminal_spots(
+        horizon_params, scenarios, seed, antithetic
+    )
     discounted_payoff = (
         exp(-params.rate * horizon_value)
         * params.notional
@@ -80,7 +82,9 @@ def estimate_risk(
     antithetic: bool = True,
 ) -> RiskResult:
     _validate_confidence(confidence)
-    losses = option_loss_scenarios(params, option_type, scenarios, seed, horizon, antithetic)
+    losses = option_loss_scenarios(
+        params, option_type, scenarios, seed, horizon, antithetic
+    )
     quantile = float(np.quantile(losses, confidence))
     tail = losses[losses >= quantile]
     cvar = float(np.mean(tail)) if len(tail) else quantile
